@@ -1,9 +1,17 @@
+<!-- Sessión Start here -->
 <?php session_start(); ?>
-
+<!--Require Includes part here -->
 <?php require_once "./includes/heeader.php" ;?>
 <?php require_once "./includes/db.php" ;?>
+
+<!-- End of Require Includes part here -->
+
+<!-- Style  of app here -->
 <link rel="stylesheet" href="./assets/categorias/css/styles.css">
-    <!--/Banner-Start-->
+<!--End of  file app here -->
+
+    
+<!--/Banner-Start-->
     <section class="bannerw3l-hnyv">
         <div class="banner-layer">
             
@@ -46,6 +54,9 @@
         </div>
 </section>
 
+<!--/ End of Banner-Start-->
+
+
 
 
 <!-- For Categories -->
@@ -78,10 +89,6 @@
     </a>
 </div>
                             
-                
-
-
-
 <?php }?>
 
 </div>

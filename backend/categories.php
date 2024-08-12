@@ -1,4 +1,5 @@
 <?php require_once "./includes/header.php" ;?>
+
 <body class="nav-fixed">
     <!--Top nav bar en Here-->
 
@@ -37,77 +38,72 @@
                         <div class="card-body">
                             <div class="datatable table-responsive">
                                 <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                             <!--Head of the table-->
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Categorías</th>
-                                            <th>Cant Articulos</th>
-                                            <th>Cant.Vistas</th>
-                                            <th>Creado por</th>
-                                            <th>Estado</th>
-                                            <th>Editar</th>
-                                            <th>Borrar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
+                                <thead>
+    <!-- Head of the table -->
+    <tr>
+        <th>#</th>
+        <th>Categorías</th>
+        <th>Cant Articulos</th>
+        <th>Cant. Vistas</th>
+        <th>Creado por</th>
+        <th>Estado</th>
+        <th>Editar</th>
+        <th>Borrar</th>
+    </tr>
+</thead>
+<tbody>
 
-                                    <?php 
-                                    // Take the categories from database
+    <?php
+    // Take the categories from database
 
-                                    $sql = "SELECT a.*, c.categoria_nombre 
-                                    FROM articulos a 
-                                    INNER JOIN categorias c ON a.categoria_articulo_id = c.categoria_id 
-                                    WHERE a.estado_articulo = :estado 
-                                    ORDER BY a.fecha_creado DESC";
+    $sql = "SELECT * FROM categorias";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    while ($categorias = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // GET ALL DATA FROM CATEGORY TABLE
+        $categoria_id = $categorias["categoria_id"];
+        $categoria_nombre = $categorias["categoria_nombre"];
+        $categoria_estado = $categorias["categoria_estado"];
+        $fecha_creado = $categorias["fecha_creado"];
+        $creado_por = $categorias["creado_por"];
 
-                                    $stmt = $pdo->prepare($sql);
-                                    $stmt->bindParam(':estado', $estado);
-                                    $estado = 1; // or 0, depending on the state you want to filter by
-                                    $stmt->execute();
-                                    $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        
 
-                                    foreach($categorias as $categoria){
-                                        // GET ALL DATA FROM CATEGORY TABLE
-                                        $categoria_id = $categoria['categoria_id'];
-                                        $articulo_id   = $categoria['articulo_id'];
-                                        $categoria_nombre = $categoria['categoria_nombre'];
-                                        $categoria_cant_articulo  = $categoria['categoria_cant_articulo'];
-                                        $total_vista_articulo     = $categoria['total_vista_articulo'];
-                                        $categoria_estado         = $categoria['categoria_estado'];
-                                        $fecha_creado             = $categoria['fecha_creado'];
-                                        $creado_por               = $categoria['creado_por'];
+        // Assuming you have columns for cant_articulo and total_vista_articulo in your categorias table
+        $categoria_cant_articulo = $categorias["categoria_cant_articulo"];
+        $total_vista_articulo = $categorias["total_vista_articulo"];
+    ?>
+        <tr>
+            <td><?= $categoria_id ?></td>
+            <td>
+                <a href="../nuestroblog.php?categoria_id=<?php echo $categoria_id;?>&categoria_nombre=<?php echo $categoria_nombre; ?>" target="_blank">
+                    <?php  echo $categoria_nombre;?>
+                </a>
+            </td>
+            <td><?= $categoria_cant_articulo ?></td>
+            <td><?= $total_vista_articulo ?></td>
+            <td><?= $creado_por ?></td>
+        
 
-                                     ?>
-
-                                        <tr>
-                                            <td><?= $categoria_id?></td>
-                                            <td>
-                                                <a href="../articles.php/?categoria_id=<?=$categoria_id?>">
-                                                <?= $categoria_nombre?>
-                                                </a>
-                                            </td>
-                                            <td><?= $categoria_cant_articulo?></td>
-                                            <td><?= $total_vista_articulo?></td>
-                                            <td><?= $creado_por?></td>
-                                            <td>
-                                                <?php if($categoria_estado == 1){?>
-                                                    <div class="badge badge-success">Publicado</div>
-                                                <?php } else {?>
-                                                    <div class="badge badge-danger">No Publicado</div>
-                                                <?php }?>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-blue btn-icon"><i data-feather="edit"></i></button>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-red btn-icon"><i data-feather="trash-2"></i></button>
-                                            </td>
-                                        </tr>
-
-                                    <?php }?>
-
-                                    </tbody>
+            <td>
+                <?php if ($categoria_estado == 1) { ?>
+                    <div class="badge badge-danger"> NO Publicado</div>
+                <?php } else { ?>
+                    <div class="badge badge-success"> Publicado</div>
+                <?php } ?>
+            </td>
+            <td>
+                <button class="btn btn-primary btn-icon"><i data-feather="edit"></i></button>
+            </td>
+            <td>
+                <button class="btn btn-danger btn-icon"><i data-feather="trash-2"></i></button>
+            </td>
+        </tr>
+    <?php
+    }
+    ?>
+</tbody>  
                                 </table>
                             </div>
                         </div>
